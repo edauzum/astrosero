@@ -1,7 +1,53 @@
 "use client";
+"use client";
+
 import React, { useMemo, useState } from "react";
 
-const packages = [
+type PackageItem = {
+  id: string;
+  name: string;
+  price: number;
+  old: number;
+  desc: string;
+  delivery: string;
+  features: string[];
+};
+
+type FormState = {
+  name: string;
+  email: string;
+  phone: string;
+  type: string;
+  question: string;
+  consent: boolean;
+};
+
+type TestResult = {
+  name: string;
+  pass: boolean;
+};
+
+type IconName =
+  | "moon"
+  | "sparkles"
+  | "shield"
+  | "card"
+  | "clock"
+  | "message"
+  | "check"
+  | "lock"
+  | "calendar"
+  | "arrow"
+  | "user"
+  | "mail"
+  | "phone"
+  | "help"
+  | "gem"
+  | "send"
+  | "menu"
+  | "x";
+
+const packages: PackageItem[] = [
   {
     id: "basic",
     name: "Tek Horary Sorusu",
@@ -41,11 +87,11 @@ const questionTypes = [
   "Diğer"
 ];
 
-function getActivePackage(packageList, selectedId) {
+function getActivePackage(packageList: PackageItem[], selectedId: string): PackageItem {
   return packageList.find((item) => item.id === selectedId) || packageList[0];
 }
 
-function isValidSubmission(form) {
+function isValidSubmission(form: FormState): boolean {
   return Boolean(
     form.name.trim() &&
       form.email.trim().includes("@") &&
@@ -54,7 +100,7 @@ function isValidSubmission(form) {
   );
 }
 
-function runSelfTests() {
+function runSelfTests(): TestResult[] {
   const sampleForm = {
     name: "Eda",
     email: "eda@example.com",
@@ -113,7 +159,7 @@ export default function AstroseroWebsite() {
   const tests = useMemo(() => runSelfTests(), []);
   const canSubmit = isValidSubmission(form);
 
-  const scrollTo = (id) => {
+  const scrollTo = (id: string) => {
     const element = document.getElementById(id);
     if (element) element.scrollIntoView({ behavior: "smooth", block: "start" });
   };
@@ -431,7 +477,7 @@ export default function AstroseroWebsite() {
   );
 }
 
-function Stat({ icon, title, value }) {
+function Stat({ icon, title, value }: { icon: IconName; title: string; value: string }) {
   return (
     <div className="rounded-2xl bg-white/5 border border-white/10 p-4">
       <div className="text-white/45 text-xs flex items-center gap-2"><Icon name={icon} className="h-4 w-4" />{title}</div>
@@ -440,7 +486,7 @@ function Stat({ icon, title, value }) {
   );
 }
 
-function SectionTitle({ eyebrow, title, text }) {
+function SectionTitle({ eyebrow, title, text }: { eyebrow: string; title: string; text: string }) {
   return (
     <div className="max-w-3xl">
       <div className="text-sm uppercase tracking-[0.25em] text-fuchsia-200 mb-3">{eyebrow}</div>
@@ -450,7 +496,7 @@ function SectionTitle({ eyebrow, title, text }) {
   );
 }
 
-function Step({ n, icon, title, text }) {
+function Step({ n, icon, title, text }: { n: string; icon: IconName; title: string; text: string }) {
   return (
     <div className="rounded-[2rem] border border-white/10 bg-white/[0.06] hover:bg-white/[0.09] transition p-6">
       <div className="flex items-center justify-between">
@@ -463,7 +509,7 @@ function Step({ n, icon, title, text }) {
   );
 }
 
-function Field({ icon, label, placeholder, value, onChange }) {
+function Field({ icon, label, placeholder, value, onChange }: { icon: IconName; label: string; placeholder: string; value: string; onChange: (value: string) => void }) {
   return (
     <div>
       <label className="text-sm text-white/65">{label}</label>
@@ -475,7 +521,7 @@ function Field({ icon, label, placeholder, value, onChange }) {
   );
 }
 
-function Trust({ icon, text }) {
+function Trust({ icon, text }: { icon: IconName; text: string }) {
   return (
     <div className="flex items-center gap-3 rounded-2xl bg-white/5 p-3 text-sm text-white/60">
       <Icon name={icon} className="h-4 w-4 text-fuchsia-200" />
@@ -484,7 +530,7 @@ function Trust({ icon, text }) {
   );
 }
 
-function Faq({ q, a }) {
+function Faq({ q, a }: { q: string; a: string }) {
   return (
     <div className="rounded-3xl border border-white/10 bg-white/[0.055] p-6">
       <h3 className="font-bold text-lg">{q}</h3>
@@ -493,8 +539,8 @@ function Faq({ q, a }) {
   );
 }
 
-function Icon({ name, className = "h-5 w-5" }) {
-  const common = {
+function Icon({ name, className = "h-5 w-5" }: { name: IconName; className?: string }) {
+  const common: React.SVGProps<SVGSVGElement> = {
     className,
     viewBox: "0 0 24 24",
     fill: "none",
@@ -505,7 +551,7 @@ function Icon({ name, className = "h-5 w-5" }) {
     "aria-hidden": "true"
   };
 
-  const icons = {
+  const icons: Record<IconName, React.ReactNode> = {
     moon: <><path d="M12 3a6 6 0 0 0 8.6 7.2A8.5 8.5 0 1 1 12 3Z" /></>,
     sparkles: <><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3Z" /><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z" /></>,
     shield: <><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" /><path d="m9 12 2 2 4-5" /></>,
